@@ -1,0 +1,177 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+	<head>
+		<title>HTML Code Processor</title>
+	<script language='JavaScript'>
+	checked = false;
+	function checkedAll () {
+		if (checked == false){checked = true}else{checked = false}
+			for (var i = 0; i < document.getElementById('opts').elements.length; i++) {
+				document.getElementById('opts').elements[i].checked = checked;
+			}
+	}
+	function toggle_visibility() {
+		var e1 = document.getElementById('cssoff');
+		var e2 = document.getElementById('csson');
+		if(e1.style.display == 'block') {
+			e1.style.display = 'none';}
+		else
+		e1.style.display = 'block';
+		if(e2.style.display == 'block') {
+			e2.style.display = 'none';
+			document.inputform.inputcss.value='';}
+		else
+		e2.style.display = 'block';
+    }
+    </script>
+<style>
+body {
+	background: #000000;
+	font-family: Arial;color:#FFFFFF;
+}
+#MainTitle {
+	text-align: center;
+	color: #00ffff;
+	margin-bottom: 0px;
+}
+#SubTitle {
+	text-align: center;
+	color: #00ffff;
+	margin-top: 0px;
+}
+#TopSubText {
+	text-align: center;
+	font-size: 8pt;
+	color: #cecece;
+	margin:0;
+}
+.textareascroll {
+	overflow-y:scroll;
+	max-width:768px;
+	background-color: #eeeeee;
+	margin:0 5px;padding:10px;
+	font-size:10pt;
+	border:2px #999999 solid;
+}
+</style>
+	</head>
+	<body style="background: #000000;font-family: Arial;color:#FFFFFF;">
+<?php
+# HTML Code Processor for improving compatbility of custom-coded HTML emails with email client software. Uses Simple HTML DOM Parser, an open-source shell to accessing PHP DOM capabilities for Basic parsing, and my own functions for doing the necessary stripping and further parsing, and inlining of styles, etc.
+
+# by Mark Coleman, 2011-2012
+?>
+
+
+<table style="margin: 0 auto;width:800px;border-collapse:collapse;background-color:#161616;"><tbody><tr><td colspan="2">
+<form id="opts" name="inputform" method="post" action="htmlprocess.php">
+<h1 id="MainTitle">EMAIL-READY</h1>
+<h4 id="SubTitle">Style Inliner and Code Conditioner</h4>
+  <p id="TopSubText"> EMAIL-READY will fix SOME invalid code, but it is not a code validator. For validation, use: <a style="color: #39e0ff; " href="http://validator.w3.org/#validate_by_input">W3C Markup Validation Service</a>.<br /><br /><br />
+<div id="cssoff" style="display:block;text-align: center;"><a href="#" style="color: #ffff00;" onclick="toggle_visibility();"><strong>SHOW SEPARATE CSS BOX (CSS & HTML in separate files)</strong></a><br /><br /></div>
+
+
+<div id="csson" style="display:none;text-align: center;"><a href="#" style="color: #ffff00;" onclick="toggle_visibility();"><strong>HIDE SEPARATE CSS BOX (CSS & HTML in one file)</strong></a><br /><br />
+<h5 style="text-align: center;margin:0;">PASTE CSS STYLES BELOW (IF STORED IN ONE OR MORE .CSS FILES)</h5>
+<div style="font-size: 7pt;">(include CSS styles from all linked files, excluding "print" only styles)</div>
+<div><textarea class="textareascroll" name="inputcss" cols="94" rows="5"></textarea></div>
+<br />
+</div>
+<h5 style="text-align: center;margin:0;">PASTE HTML CODE BELOW (IF CONTAINED IN ONE FILE)</h5>
+<div style="font-size: 7pt;text-align: center;">(If pasting CSS styles in the box above, any styles included in HTML document pasted below will be ignored)</div>
+<textarea class="textareascroll" name="inputcode" cols="94" rows="10"></textarea>
+
+
+  </td></tr>
+  <tr><td style="padding-top:20px;border-bottom: 1px #333333 solid;" width="100%" colspan="2" >  
+<div style="text-align: center;"><strong><span style="color:#00ffff;font-size: 14pt;">Processing Options</span></strong><br /><span style="font-size:9pt;color: #ffffff;">Recommendation: choose just the options that fit your need, as not all options are well-suited for all types of emails.<br />The simpler the structure of the email (i.e., small number of large image slices), the more likely the tool will do the trick.<br />For more complex emails you obviously may still need to edit some code by hand.</span><br /><br /></div>
+
+<div style="text-align: center;display:none;"><input id="checkall" type='button' onclick="checkedAll ()" value="Select/Unselect All" /><br /><br /></div>
+    </td></tr>
+   <tr><td style="vertical-align: top;" width="400px">
+<div style="width:320px;margin: 0 auto;font-size: 10pt;">
+<div style="color:#00ff00;">   
+     <input style="height:14px;width:25px;" type="checkbox" name="select[0]" value="yes" /><span style="line-height:16pt;text-decoration: underline;"><strong>INLINE the CSS styles</strong></span> <span style=" font-size: 8.0pt;vertical-align: top;">A</span><br /><p style="color: #ffffff;font-size: 10.0pt;padding:0 0 5px 30px;margin:0;">(req'd for styles to work in some email clients)</p> 
+</div>
+<div style="color:#ff00ff;">
+     <input style="height:14px;width:25px;" type="checkbox" name="select[1]" value="yes" /><span style="line-height:16pt;">Try to fix <strong>VERTICAL SPACING</strong> issues</span> <span style=" font-size: 8.0pt;vertical-align: top;">B</span><br /><p style="color: #ffffff;padding:0 0 5px 30px;margin:0;">(sliced image emails: Gmail/Hotmail/Yahoo)</p> 
+     <input style="height:14px;width:25px;" type="checkbox" name="select[2]" value="yes" /><span style="line-height:16pt;">Try to fix <strong>HORIZONTAL SPACING</strong> issues</span> <span style=" font-size: 8.0pt;vertical-align: top;">C</span><br /><p style="color: #ffffff;padding:0 0 5px 30px;margin:0;">(sliced image emails: Outlook)</p> 
+     <input style="height:14px;width:25px;" type="checkbox" name="select[3]" value="yes" /><span style="line-height:16pt;">Try to fix <strong>ALL-AROUND IMAGE SPACING</strong></span> <span style=" font-size: 8.0pt;vertical-align: top;">D</span><br /><p style="color: #ffffff;padding:0 0 5px 30px;margin:0;">(sliced image emails: Various clients)</p>
+</div>
+</div>
+  </td>
+  <td style="vertical-align: top;" width="400px">
+<div style="width:320px;margin: 0 auto;font-size: 10pt;">
+<div style="color:#996633;">
+     <input style="height:14px;width:25px;" type="checkbox" name="select[4]" value="yes" /><span style="line-height:16pt;">Strip HTML comments</span> <span style="font-size: 8.0pt;vertical-align: top;">E</span><br />
+     <input style="height:14px;width:25px;" type="checkbox" name="select[5]" value="yes" /><span style="line-height:16pt;">Strip conditional comments</span> <span style=" font-size: 8.0pt;vertical-align: top;">F</span><br />
+     <input style="height:14px;width:25px;" type="checkbox" name="select[6]" value="yes" /><span style="line-height:16pt;">Strip CSS comments</span> <span style="font-size: 8.0pt;vertical-align: top;">G</span><br />
+     <input style="height:14px;width:25px;" type="checkbox" name="select[7]" value="yes" /><span style="line-height:16pt;">Strip !important property</span> <span style="font-size: 8.0pt;vertical-align: top;">H</span><br />
+     <input style="height:14px;width:25px;" type="checkbox" name="select[8]" value="yes" /><span style="line-height:16pt;">Strip empty & obsolete spans</span> <span style="font-size: 8.0pt;vertical-align: top;">I</span>
+</div>
+<div style="color: #fffd70">
+     <input style="height:14px;width:25px;" type="checkbox" name="select[9]" value="yes" /><span style="line-height:16pt;">Copy inline heigh/width to attributes in img tags</span> <span style="font-size: 8.0pt;vertical-align: top;">J</span><br />
+     <input style="height:14px;width:25px;" type="checkbox" name="select[10]" value="yes" /><span style="line-height:16pt;">Close br, hr, img tags (XHTML)</span> <span style="font-size: 8.0pt;vertical-align: top;">K</span>
+</div><br />
+</td>
+</tr>
+<tr>
+<td colspan="2"><div style="width:800px;font-size: 10pt;text-align: center;">scroll down to see footnotes and caveats.</div></td>
+</tr>
+
+</div>
+	</td></tr>
+	<tr><td style="border-top: 1px #333333 solid;" colspan="2">
+  <div style="margin:0 auto;width:180px;"><br /><input style="background-color:#ffff00;font-size: 16px;font-weight:bold;" type="submit" value="PROCESS THE CODE" /></div>
+<br />
+<p style="text-align: center;font-size: 8pt; color: #999999;">HTML Code Processor v0.62b - by Mark Coleman</p></form>
+</td></tr></tbody></table>
+
+
+<table style="margin: 0 auto;width:800px;border:0;border-collapse:collapse;border-top: 2px #ffffff solid;"><tbody><tr><td colspan="2" style="background-color:#2f2f2f;padding: 20px;">
+	
+    <div style="font-size: 11pt;text-align: left;line-height:18pt;padding-top:10px;font-weight: 100;color: #dedede;">
+<ol style="list-style-type: upper-alpha;">
+<li><span style="color: #21FF00;"><strong>Inline the CSS styles</strong></span> tries to remove the CSS styles from the header and adds them to inline <strong>style</strong> attribute for each tag - essentially required by some email clients. 
+<ol>
+	<li>Currently this works if all styles are contained within a single <strong>style</strong> element, or are pasted into the style box.</li>
+	<li>If there are multiple style sheets linked to a document, the styles contained in them should all be pasted into the style box before processing.</li>
+	<li>Style sections that are within conditional comments are ignored in the HTML box. This typically doesn't matter, because these styles usually are an attempt to do something special in Internet Explorer that won't work in most email clients, anyway.</li>
+	<li>If there are multiple style sections within the HTML document, at present, only the first one will be parsed and inlined, so you may want to manually combine multiple style sections with some strategic copying and pasting.</li>
+	<li>Don't inline "for print" CSS styles. Check the <strong>style</strong> element for subsections preceded by: "@media print" and remove them before inlining for best results. You can copy them into a separate text file temporarily and add them back in as a new <strong>style</strong> element in the document's <strong>head</strong> element, if you like. While they are not relevant styles for viewing emails on screen within email clients, they may be used when printing the webpage version of emails.</li>
+</ol>
+</li>
+
+<li><span style="color: #FB00FF;"><strong>Try to fix VERTICAL SPACING issues</strong></span> tries to do several things that help with vertical spacing issues in email clients when displaying sliced image emails with images arranged in html tables.<br />
+<ol>
+	<li>It tries to add <strong>display: block</strong> to the inline <strong>style</strong> attribute for each <strong>img</strong> element. Currently, this utility tries to do this to all <strong>img</strong> elements within <strong>td</strong> elements within the document. This will work to remove gaps below images in gmail, hotmail, or yahoo mail in many cases, but ONLY if the email is a sliced image arranged in a table in which each image is inside it's own <strong>td</strong> element. If two images are side-by-side in a single <strong>td</strong> element, adding <strong>display:block</strong> can cause one image to display beneath the other in some email clients. In that case, manually breaking the images out into separate TD tags and adjusting <strong>colspan</strong> attributes in rows above and below may also be required.</li>
+	<li>It tries to add a <strong>border=0</strong> attribute to all <strong>img</strong> elements within <strong>a</strong> elements. This helps prevent some email clients from adding a blue border around linked images.</li>
+	<!--<li>It tries to add <strong>line-height: 0</strong> to the inline <strong>style</strong> attribute in all <strong>td</strong> elements containing only an <strong>img</strong> element.</li>-->
+</ol>
+</li>
+
+<li><span style="color: #FB00FF;"><strong>Try to fix HORIZONTAL SPACING issues</strong></span> tries to copy height and width attributes from <strong>img</strong> elements within <strong>td</strong> elements, and adds them to the parent <strong>td</strong> elements. This usually fixes issues with sliced image emails arranged in tables in which images are spacing or spreading out horizontally in Outlook.</li>
+
+<li><span style="color: #FB00FF;"><strong>Try to fix ALL-AROUND IMAGE SPACING</strong></span> tries to set <strong>cellpadding</strong>, <strong>cellspacing</strong>, and <strong>border</strong> attributes to zero in <strong>table</strong> elements when they are not already present. When these attributes are not present, browser and email clients may add spacing and padding in and between cells in a sliced image email by default, causing unwanted spacing around every image slice.</li>
+
+<li><span style="color: #875321;"><strong>Strip HTML comments</strong></span> tries to strips all normal HTML comments.</li>
+
+<li><span style="color: #875321;"><strong>Strip conditional comments</strong></span> tries to strip all conditional comments of the form:<br /><strong>&lt;!--[if IE]&gt; &lt;style&gt;INSERT CONDITIONAL CODE HERE&lt;/style&gt; &lt;![endif]--&gt;</strong>.</li>
+
+<li><span style="color: #875321;"><strong>Strip CSS comments</strong></span> tries to strip all CSS comments only.</li>
+
+<li><span style="color: #875321;"><strong>Strip !important property</strong></span> tries to strip the <strong>!important</strong> property from styles, as well as common variances of the property that cause email clients to ignore inline styles for a given element.</li>
+
+<li><span style="color: #875321;"><strong>Strip empty & obsolete spans</strong></span> tries to strip instances of <strong>&lt;span&gt;&lt;/span&gt;</strong> or <strong>span</strong> elements that have no attributes (obsolete <strong>span</strong> elements).</li>  
+
+<li><span style="color: #FFFE4B;"><strong>Copy inline heigh/width to attributes in img tags</strong></span> tries to find all <strong>img</strong> elements that includes widths and heights in an inline style, but NOT as attributes. Outlook may ignore image heights and widths if they are not in attribute form and display images at their full/native size.</li>
+
+<li><span style="color: #FFFE4B;"><strong>Close br, hr, img tags (XHTML)</strong></span> tries to ensure that all <strong>br</strong>, <strong>hr</strong>, and <strong>img</strong> elements are closed as required by XHTML syntax rules.</li>
+
+</div>
+</td></tr></tbody></table>
+
+
+	</body>
+</html>
